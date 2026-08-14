@@ -1,0 +1,23 @@
+extends Area2D
+
+@onready var game_manager: Node = %GameManager  
+
+func _ready():
+	monitoring = true
+	body_entered.connect(_on_body_entered)
+
+func _on_body_entered(body):
+	if not body.is_in_group("player"):
+		return
+
+	# Save the current coin score before leaving this level
+	if game_manager and game_manager.has_method("save_score"):
+		game_manager.save_score()
+
+	var current_scene = get_tree().current_scene.name
+	print(current_scene)
+	if current_scene == "Game":
+		get_tree().change_scene_to_file.call_deferred("res://Level2.tscn")
+	elif current_scene == "Level2":
+		print("Working")
+		get_tree().change_scene_to_file.call_deferred("res://level_3.tscn")
