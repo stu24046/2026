@@ -1,0 +1,26 @@
+extends Node
+
+var score = 0
+@onready var score_label: Label = $ParallaxBackground/CanvasLayer/UI/ScoreLabel
+
+const SAVE_PATH = "user://coin_save.dat"
+
+func _ready():
+	load_score()
+	update_label()
+
+func add_point():
+	score += 1
+	update_label()
+
+func save_score():
+	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	file.store_32(score)
+
+func load_score():
+	if FileAccess.file_exists(SAVE_PATH):
+		var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
+		score = file.get_32()
+
+func update_label():
+	score_label.text = "You collected " + str(score) + " coins."
